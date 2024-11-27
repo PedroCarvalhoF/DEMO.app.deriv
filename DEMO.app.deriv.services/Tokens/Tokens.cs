@@ -3,7 +3,7 @@
     public static class Tokens
     {
         public static DefinicoesToken GetTokenLeitura()
-             => DefinicoesToken.Leitura("Demo_temp_token", "***********g6kX", Ambito.ApenasLeitura, "Nunca");
+             => DefinicoesToken.Leitura("Demo_temp_token", "***********g6kX", Ambito.Read, "Nunca");
     }
 
     public class DefinicoesToken
@@ -25,6 +25,6 @@
     }
     public enum Ambito
     {
-        ApenasLeitura
+        Admin, Read, Trade
     }
 }
