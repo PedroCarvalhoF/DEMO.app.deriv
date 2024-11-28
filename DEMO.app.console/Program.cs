@@ -9,8 +9,8 @@ namespace DEMO.app.console
 {
     internal class Program
     {
-        private static readonly Uri WebSocketUri = new Uri("wss://ws.derivws.com/websockets/v3?app_id=1089");
-      //  private const string AuthorizationToken = "***********QVoc"; // Substitua pelo seu token real
+        private static readonly Uri WebSocketUri = new Uri("wss://ws.derivws.com/websockets/v3?app_id=66069");
+        private const string AuthorizationToken = "NIyfyeoQZw4WhRC"; // Substitua pelo seu token real
         private static readonly CancellationTokenSource Cts = new CancellationTokenSource();
         static async Task Main(string[] args)
         {
@@ -20,14 +20,16 @@ namespace DEMO.app.console
                 {
                     Console.WriteLine("Attempting to connect to WebSocket...");
                     await webSocket.ConnectAsync(WebSocketUri, Cts.Token);
-                     Thread.Sleep(5000);
+                    ////Send authorization
+                    //await SendAuthorizationAsync(webSocket);
+                    
+                   
 
                     if (webSocket.State == WebSocketState.Open)
                     {
                         Console.WriteLine("[status] WebSocket connection established.");
 
-                        // Send authorization
-                        //await SendAuthorizationAsync(webSocket);
+                        
 
                         // Send contracts for symbol request
                         await SendContractsForSymbolRequestAsync(webSocket);
@@ -63,14 +65,14 @@ namespace DEMO.app.console
 
 
         }
-        //private static async Task SendAuthorizationAsync(ClientWebSocket webSocket)
-        //{
-        //    var authRequest = new { authorize = AuthorizationToken };
-        //    string requestJson = JsonSerializer.Serialize(authRequest);
+        private static async Task SendAuthorizationAsync(ClientWebSocket webSocket)
+        {
+            var authRequest = new { authorize = AuthorizationToken };
+            string requestJson = JsonSerializer.Serialize(authRequest);
 
-        //    await SendMessageAsync(webSocket, requestJson);
-        //    Console.WriteLine("[request] Authorization sent.");
-        //}
+            await SendMessageAsync(webSocket, requestJson);
+            Console.WriteLine("[request] Authorization sent.");
+        }
         private static async Task SendContractsForSymbolRequestAsync(ClientWebSocket webSocket)
         {
             var contractsForSymbolRequest = new
