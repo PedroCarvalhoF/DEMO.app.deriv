@@ -7,10 +7,16 @@ namespace DEMO.app.deriv.services.Services
     {
         private static ServiceCollection serviceCollection;
         public static IApiService IApiService { get; set; }
+        public static WebSocketService WebSocketService { get; private set; }
         private static ServiceCollection ColecaoServico()
         {
             serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IApiService, ApiService>();
+            serviceCollection.AddSingleton<WebSocketService>(provider =>
+            {
+                string appId = "66069"; // Substitua pelo seu App ID
+                return new WebSocketService(appId);
+            });
 
             return serviceCollection;
         }
@@ -18,5 +24,7 @@ namespace DEMO.app.deriv.services.Services
         {
             ServiceProvider serviceProvider = ColecaoServico().BuildServiceProvider();
             IApiService = serviceProvider.GetRequiredService<IApiService>();
+            WebSocketService = serviceProvider.GetRequiredService<WebSocketService>();
         }
+    }
 }

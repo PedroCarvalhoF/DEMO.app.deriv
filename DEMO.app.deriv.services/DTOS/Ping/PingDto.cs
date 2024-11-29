@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DEMO.app.deriv.services.DTOS.Ping
+﻿namespace DEMO.app.deriv.services.DTOS.Ping
 {
-    internal class PingDto
+    public class PingDto
     {
+        public int ping { get; private set; }
+
+        public PingDto()
+        {
+            ping = 1;
+        }
     }
 }
