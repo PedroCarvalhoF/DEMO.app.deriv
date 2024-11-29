@@ -2,7 +2,16 @@
 {
     public class AuthorizeDto
     {
-        public string authorize { get; private set; }
+        public string email { get; set; }
+        public decimal balance { get; set; }
+        public string authorize { get; set; }
+        public string fullname { get; internal set; }
+        public string loginid { get; internal set; }
+
+        public AuthorizeDto()
+        {
+
+        }
 
         AuthorizeDto(string authorize)
         {

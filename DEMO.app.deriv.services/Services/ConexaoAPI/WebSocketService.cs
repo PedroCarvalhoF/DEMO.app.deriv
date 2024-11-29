@@ -29,6 +29,14 @@ namespace DEMO.app.deriv.services.Services.ConexaoAPI
                 Console.WriteLine("Conexão estabelecida.");
             }
         }
+        public bool GetStatusConexaoWebSockets()
+        {
+            if (_webSocket.State == WebSocketState.Open)
+                return true;
+
+            return false;
+        }
+
 
         // Método para enviar mensagens
         public async Task SendMessageAsync(object message)

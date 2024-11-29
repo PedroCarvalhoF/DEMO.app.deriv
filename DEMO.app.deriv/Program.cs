@@ -14,7 +14,7 @@ namespace DEMO.app.deriv
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            ServicosApp.RequisicaoServicos();
+            
             Application.Run(new Form1());
         }
     }

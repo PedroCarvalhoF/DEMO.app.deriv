@@ -83,12 +83,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOS\Authorize\AuthorizeDto.cs" />
+    <Compile Include="DTOS\Authorize\AuthorizeDtoResponse.cs" />
     <Compile Include="DTOS\Ping\PingDtoRequest.cs" />
     <Compile Include="DTOS\Ping\PingDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConexaoAPI\ApiService.cs" />
     <Compile Include="Services\ConexaoAPI\IApiService.cs" />
     <Compile Include="Services\ConexaoAPI\WebSocketService.cs" />
+    <Compile Include="Services\DeriviApi\Authorize\AuthorizeServices.cs" />
+    <Compile Include="Services\DeriviApi\Authorize\IAuthorizeServices.cs" />
     <Compile Include="Services\Helpers\StatusCodeHelpers.cs" />
     <Compile Include="Services\ServicosApp.cs" />
     <Compile Include="Tokens\Tokens.cs" />
@@ -97,6 +100,7 @@
   <ItemGroup>
     <Folder Include="DTOS\Contratos\" />
     <Folder Include="Implementacoes\" />
+    <Folder Include="Services\DeriviApi\Token\" />
     <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>

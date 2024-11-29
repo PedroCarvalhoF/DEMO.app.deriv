@@ -1,4 +1,5 @@
 ﻿using DEMO.app.deriv.services.Services.ConexaoAPI;
+using DEMO.app.deriv.services.Services.DeriviApi.Authorize;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DEMO.app.deriv.services.Services
@@ -8,7 +9,8 @@ namespace DEMO.app.deriv.services.Services
         private static ServiceCollection serviceCollection;
         public static IApiService IApiService { get; set; }
         public static WebSocketService WebSocketService { get; private set; }
-        private static ServiceCollection ColecaoServico()
+        public static IAuthorizeServices IAuthorizeServices { get; private set; }
+        private static ServiceCollection ColecaoServico(string idApplicationManager)
         {
             serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IApiService, ApiService>();
@@ -17,14 +19,22 @@ namespace DEMO.app.deriv.services.Services
                 string appId = "66069"; // Substitua pelo seu App ID
                 return new WebSocketService(appId);
             });
+            serviceCollection.AddSingleton<IAuthorizeServices, AuthorizeServices>();
 
             return serviceCollection;
         }
-        public static void RequisicaoServicos()
+        /// <summary>
+        /// informar o id do gerenciador da aplicação
+        /// https://api.deriv.com/dashboard/
+        /// </summary>
+        /// <param name="idApplicationManager"></param>
+        /// <returns></returns>
+        public static void RequisicaoServicos(string idApplicationManager)
         {
-            ServiceProvider serviceProvider = ColecaoServico().BuildServiceProvider();
+            ServiceProvider serviceProvider = ColecaoServico(idApplicationManager).BuildServiceProvider();
             IApiService = serviceProvider.GetRequiredService<IApiService>();
             WebSocketService = serviceProvider.GetRequiredService<WebSocketService>();
+            IAuthorizeServices = serviceProvider.GetRequiredService<IAuthorizeServices>();
         }
     }
 }
