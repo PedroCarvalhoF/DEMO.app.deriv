@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DEMO.app.deriv.services.Services;
+using System;
 using System.Windows.Forms;
 
 namespace DEMO.app.deriv
@@ -16,6 +14,7 @@ namespace DEMO.app.deriv
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            ServicosApp.RequisicaoServicos();
             Application.Run(new Form1());
         }
     }

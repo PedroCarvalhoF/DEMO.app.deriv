@@ -1,71 +1,63 @@
-﻿using DEMO.app.deriv.services.Services.Helpers;
-using DEMO.app.deriv.services.Urls;
-using RestSharp;
-using System;
-using System.Net;
-using System.Text.Json;
+﻿using System;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DEMO.app.deriv.services.Services.ConexaoAPI
 {
-    public class ApiService : IApiService, IDisposable
+    public class ApiService : IApiService
     {
-        private readonly string _urlBase;
-        private readonly JsonSerializerOptions _options;
-
-        public ApiService(string urlBase, JsonSerializerOptions options)
+        private static readonly Uri WebSocketUri = new Uri("wss://ws.derivws.com/websockets/v3?app_id=66069");
+        private const string AuthorizationToken = "NIyfyeoQZw4WhRC"; // Substitua pelo seu token real
+        public async Task<string> ConectWebSockets()
         {
-            _urlBase = UrlsHelper.UrlApiDerivBase;
-            _options = new JsonSerializerOptions
+            string app_id = "1089"; // Replace with your app_id.
+            string uri = $"wss://ws.derivws.com/websockets/v3?app_id={app_id}"; // WebSocket URI with the app_id
+
+            using (ClientWebSocket webSocket = new ClientWebSocket())
             {
-                PropertyNameCaseInsensitive = true
-            };
-        }
-
-        public Task<string> Get(string token, string url, object objGet = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> Post(string token, string url, object objCreate = null)
-        {
-            try
-            {
-                url = _urlBase + url;
-                using (RestClient client = new RestClient(url))
+                try
                 {
+                    // Connect to the WebSocket server
+                    await webSocket.ConnectAsync(WebSocketUri, CancellationToken.None);
+                    Console.WriteLine("[open] Connection established");
 
-                    RestRequest request = new RestRequest(url, Method.Post);
-                    request.RequestFormat = DataFormat.Json;
-                    request.AddHeader("authorization", "Bearer " + token);
+                    // Send a ping message to the server
+                    string sendMessage = "{\"ping\": 1}"; // Prepare the ping message in JSON format
+                    ArraySegment<byte> bytesToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(sendMessage));
+                    await webSocket.SendAsync(bytesToSend, WebSocketMessageType.Text, true, CancellationToken.None);
+                    Console.WriteLine("Sending to server");
 
-                    if (objCreate != null)
-                        request.AddBody(objCreate);
+                    // Receive message from the server
+                    var buffer = new byte[1024];
+                    WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-                    RestResponse response = await client.ExecuteAsync(request);                    
+                    string response = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close connection", CancellationToken.None);
+                    return response;
 
-                    return StatusCodeHelpers.GetStatusCodeResponse(response);
-                   
+                    //Console.WriteLine("[message] Data received from server: " + response);
+
+                    //// Close the WebSocket connection cleanly
+
+                    //Console.WriteLine("[close] Connection closed cleanly");
+                }
+                catch (WebSocketException e)
+                {
+                    Console.WriteLine("[error] WebSocket error: " + e.Message);
+                    throw new Exception(e.Message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("[error] " + e.Message);
+                    throw new Exception(e.Message);
+                }
+                finally
+                {
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close connection", CancellationToken.None);
                 }
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public Task<string> Put(string token, string url, object objUpdate = null)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<string> Delete(string token, string url, object objDelete = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -76,5 +76,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DEMO.app.deriv.services\DEMO.app.deriv.services.csproj">
+      <Project>{b335ea1f-f3df-4d1c-b303-732b062405a8}</Project>
+      <Name>DEMO.app.deriv.services</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
