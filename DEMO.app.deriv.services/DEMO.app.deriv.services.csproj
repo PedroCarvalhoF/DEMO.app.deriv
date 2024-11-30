@@ -84,21 +84,38 @@
   <ItemGroup>
     <Compile Include="DTOS\Authorize\AuthorizeDto.cs" />
     <Compile Include="DTOS\Authorize\AuthorizeDtoResponse.cs" />
+    <Compile Include="DTOS\Contratos\Available.cs" />
+    <Compile Include="DTOS\Contratos\ContractsFor.cs" />
+    <Compile Include="DTOS\Contratos\EchoReq.cs" />
+    <Compile Include="DTOS\Contratos\ForwardStartingOption.cs" />
+    <Compile Include="DTOS\Contratos\Root.cs" />
     <Compile Include="DTOS\Ping\PingDtoRequest.cs" />
     <Compile Include="DTOS\Ping\PingDto.cs" />
+    <Compile Include="DTOS\ProposalContract\ContractDetails.cs" />
+    <Compile Include="DTOS\ProposalContract\EchoReq.cs" />
+    <Compile Include="DTOS\ProposalContract\Payout.cs" />
+    <Compile Include="DTOS\ProposalContract\Proposal.cs" />
+    <Compile Include="DTOS\ProposalContract\RootObject.cs" />
+    <Compile Include="DTOS\ProposalContract\Stake.cs" />
+    <Compile Include="DTOS\ProposalContract\ValidationParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConexaoAPI\ApiService.cs" />
     <Compile Include="Services\ConexaoAPI\IApiService.cs" />
     <Compile Include="Services\ConexaoAPI\WebSocketService.cs" />
     <Compile Include="Services\DeriviApi\Authorize\AuthorizeServices.cs" />
     <Compile Include="Services\DeriviApi\Authorize\IAuthorizeServices.cs" />
+    <Compile Include="Services\DeriviApi\Contracts\ContractsServices.cs" />
+    <Compile Include="Services\DeriviApi\Contracts\IContractsServices.cs" />
+    <Compile Include="Services\DeriviApi\ProposalContract\IProposalContractServices.cs" />
+    <Compile Include="Services\DeriviApi\ProposalContract\ProposalContractServices.cs" />
+    <Compile Include="Services\DeriviApi\VelocidadeConexao\IPingMsServices.cs" />
+    <Compile Include="Services\DeriviApi\VelocidadeConexao\PingMsServices.cs" />
     <Compile Include="Services\Helpers\StatusCodeHelpers.cs" />
     <Compile Include="Services\ServicosApp.cs" />
     <Compile Include="Tokens\Tokens.cs" />
     <Compile Include="Urls\UrlsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DTOS\Contratos\" />
     <Folder Include="Implementacoes\" />
     <Folder Include="Services\DeriviApi\Token\" />
     <Folder Include="Tools\" />

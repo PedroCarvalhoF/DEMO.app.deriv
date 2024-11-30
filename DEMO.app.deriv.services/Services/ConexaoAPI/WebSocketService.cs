@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -64,6 +65,7 @@ namespace DEMO.app.deriv.services.Services.ConexaoAPI
             else
             {
                 Console.WriteLine("Conexão WebSocket não está aberta.");
+                await ConnectAsync();
             }
         }
 
@@ -87,10 +89,52 @@ namespace DEMO.app.deriv.services.Services.ConexaoAPI
         // Método para receber mensagens
         public async Task<string> ReceiveMessageAsync()
         {
-            var buffer = new byte[8192];
-            var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _cts.Token);
-            return Encoding.UTF8.GetString(buffer, 0, result.Count);
+            const int bufferSize = 1024; // Tamanho do buffer para leitura
+            var buffer = new ArraySegment<byte>(new byte[bufferSize]);
+
+            // Substituindo o uso do 'using' por uma declaração tradicional
+            var memoryStream = new MemoryStream();
+            WebSocketReceiveResult result;
+
+            try
+            {
+                // Recebe mensagens do WebSocket
+                do
+                {
+                    result = await _webSocket.ReceiveAsync(buffer, CancellationToken.None);
+
+                    // Se o servidor enviar um fechamento da conexão
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Conexão encerrada pelo servidor", CancellationToken.None);
+                        Console.WriteLine("Conexão encerrada pelo servidor.");
+                        return string.Empty;
+                    }
+
+                    // Escreve os dados recebidos no MemoryStream
+                    memoryStream.Write(buffer.Array, buffer.Offset, result.Count);
+
+                } while (!result.EndOfMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao receber a mensagem: {ex.Message}");
+                return string.Empty;
+            }
+            finally
+            {
+                // Garante que o Dispose seja chamado para liberar recursos
+                //memoryStream.Dispose();
+            }
+
+            // Faz a leitura do MemoryStream após o recebimento completo da mensagem
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            var reader = new StreamReader(memoryStream, Encoding.UTF8);
+            string response = await reader.ReadToEndAsync();
+            return response;
         }
+
+
         // Dispose
         public void Dispose()
         {
