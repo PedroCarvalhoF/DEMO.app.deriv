@@ -7,5 +7,6 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.ProposalContract
 
     {
         Task<RootObject> GetProposalResponseAsync();
+        Task<decimal> GetProposalResponseApenasValorAsync();
     }
 }

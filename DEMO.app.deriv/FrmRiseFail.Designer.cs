@@ -29,66 +29,68 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.txtPrecoContrato = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.lblPreco = new System.Windows.Forms.Label();
+            this.flStatusPrecoContrato = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
-            // 
-            // chart1
-            // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
-            this.chart1.Location = new System.Drawing.Point(13, 13);
-            this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(458, 433);
-            this.chart1.TabIndex = 0;
-            this.chart1.Text = "chart1";
             // 
             // timer1
             // 
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // txtPrecoContrato
+            // cartesianChart1
             // 
-            this.txtPrecoContrato.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPrecoContrato.Location = new System.Drawing.Point(478, 13);
-            this.txtPrecoContrato.Name = "txtPrecoContrato";
-            this.txtPrecoContrato.Size = new System.Drawing.Size(398, 47);
-            this.txtPrecoContrato.TabIndex = 1;
+            this.cartesianChart1.Location = new System.Drawing.Point(12, 3);
+            this.cartesianChart1.Name = "cartesianChart1";
+            this.cartesianChart1.Size = new System.Drawing.Size(935, 282);
+            this.cartesianChart1.TabIndex = 2;
+            this.cartesianChart1.Text = "cartesianChart1";
+            // 
+            // lblPreco
+            // 
+            this.lblPreco.AutoSize = true;
+            this.lblPreco.Font = new System.Drawing.Font("Tahoma", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPreco.Location = new System.Drawing.Point(2, 303);
+            this.lblPreco.Name = "lblPreco";
+            this.lblPreco.Size = new System.Drawing.Size(150, 58);
+            this.lblPreco.TabIndex = 3;
+            this.lblPreco.Text = "label1";
+            // 
+            // flStatusPrecoContrato
+            // 
+            this.flStatusPrecoContrato.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flStatusPrecoContrato.BackColor = System.Drawing.Color.White;
+            this.flStatusPrecoContrato.Location = new System.Drawing.Point(12, 364);
+            this.flStatusPrecoContrato.Name = "flStatusPrecoContrato";
+            this.flStatusPrecoContrato.Size = new System.Drawing.Size(935, 140);
+            this.flStatusPrecoContrato.TabIndex = 4;
             // 
             // FrmRiseFail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 458);
-            this.Controls.Add(this.txtPrecoContrato);
-            this.Controls.Add(this.chart1);
+            this.ClientSize = new System.Drawing.Size(959, 516);
+            this.Controls.Add(this.flStatusPrecoContrato);
+            this.Controls.Add(this.lblPreco);
+            this.Controls.Add(this.cartesianChart1);
             this.Name = "FrmRiseFail";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmRiseFail";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmRiseFail_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.TextBox txtPrecoContrato;
+        private LiveCharts.WinForms.CartesianChart cartesianChart1;
+        private System.Windows.Forms.Label lblPreco;
+        private System.Windows.Forms.FlowLayoutPanel flStatusPrecoContrato;
     }
 }
