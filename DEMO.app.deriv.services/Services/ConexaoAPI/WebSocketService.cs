@@ -1,17 +1,21 @@
 ﻿using DEMO.app.deriv.services.Services.ConexaoAPI;
-using System;
 using System.IO;
 using System.Net.WebSockets;
-using System.Text;
 using System.Text.Json;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System;
 
 public class WebSocketService : IWebSocketService
 {
-    private readonly ClientWebSocket _webSocket;
+    private  ClientWebSocket _webSocket;
     private readonly string _uri;
     private readonly CancellationTokenSource _cts;
+    private readonly SemaphoreSlim _receiveSemaphore = new SemaphoreSlim(1, 1);
+    private int _maxReconnectAttempts = 5; // Número máximo de tentativas de reconexão
+    private TimeSpan _reconnectInterval = TimeSpan.FromSeconds(5); // Intervalo entre tentativas de reconexão
+
     public WebSocketService(string appId)
     {
         _uri = $"wss://ws.derivws.com/websockets/v3?app_id={appId}";
@@ -21,35 +25,65 @@ public class WebSocketService : IWebSocketService
 
     public async Task ConnectAsync()
     {
-        try
+        int attempt = 0;
+
+        while (attempt < _maxReconnectAttempts)
         {
-            if (_webSocket.State != WebSocketState.Open)
-                await _webSocket.ConnectAsync(new Uri(_uri), _cts.Token);
-        }
-        catch (WebSocketException ex)
-        {
-            throw new WebSocketException(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
+            try
+            {
+                if (_webSocket == null || _webSocket.State != WebSocketState.Open)
+                {
+                    // Certifique-se de liberar a instância anterior antes de criar uma nova
+                    _webSocket?.Dispose();
+                    _webSocket = new ClientWebSocket();
+
+                    Console.WriteLine("Tentando conectar...");
+                    await _webSocket.ConnectAsync(new Uri(_uri), _cts.Token);
+                    Console.WriteLine("Conexão estabelecida.");
+                    return; // Conexão bem-sucedida, sai do loop
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao tentar conectar: {ex.Message}");
+                attempt++;
+                if (attempt >= _maxReconnectAttempts)
+                {
+                    Console.WriteLine("Número máximo de tentativas de reconexão atingido.");
+                    throw; // Lança a exceção após atingir o limite de tentativas
+                }
+                else
+                {
+                    Console.WriteLine($"Tentando novamente em {_reconnectInterval.TotalSeconds} segundos...");
+                    await Task.Delay(_reconnectInterval); // Aguarda antes de tentar novamente
+                }
+            }
         }
     }
+
+
     public async Task<ClientWebSocket> GetClientWebSocketOpen()
     {
         await ConnectAsync();
-
         return _webSocket;
     }
+
     public bool GetStatusConexao() => _webSocket.State == WebSocketState.Open;
+
     public async Task SendMessageAsync(object message)
     {
         try
         {
+            await _receiveSemaphore.WaitAsync();
+
             if (!GetStatusConexao())
             {
-                throw new ArgumentException("Conexão está fechada");
+                Console.WriteLine("Conexão está fechada.");
+                Console.WriteLine("Reconecatar");
+                await ConnectAsync();                
             }
+
+           
 
             var jsonMessage = JsonSerializer.Serialize(message);
 
@@ -57,26 +91,46 @@ public class WebSocketService : IWebSocketService
         }
         catch (WebSocketException ex)
         {
+            Console.WriteLine($"Erro ao enviar mensagem: {ex.Message}");
             throw new WebSocketException(ex.Message);
         }
         catch (Exception ex)
         {
-
+            Console.WriteLine($"Erro inesperado: {ex.Message}");
             throw new Exception(ex.Message);
         }
+        finally
+        {
+            _receiveSemaphore.Release(); // Libera o bloqueio após a operação
+            
+            if (!GetStatusConexao())
+            {
+                Console.WriteLine("Conexão está fechada.");
+                Console.WriteLine("Reconecatar");
+                await ConnectAsync();
+            }
+        }
     }
+
     public async Task<string> ReceiveMessageAsync()
     {
+        await _receiveSemaphore.WaitAsync(); // Adquire o bloqueio antes de começar a operação
+
         try
         {
-            const int bufferSize = 4096; // Tamanho do buffer para leitura
+            if (!GetStatusConexao())
+            {
+                Console.WriteLine("Conexão está fechada.");
+                Console.WriteLine("Reconecatar");
+                await ConnectAsync();
+               
+            }
+            const int bufferSize = 10000; // Tamanho do buffer para leitura
             var buffer = new ArraySegment<byte>(new byte[bufferSize]);
 
-            // Substituindo o uso do 'using' por uma declaração tradicional
             using (var memoryStream = new MemoryStream())
             {
                 WebSocketReceiveResult result;
-                // Recebe mensagens do WebSocket
                 do
                 {
                     result = await _webSocket.ReceiveAsync(buffer, CancellationToken.None);
@@ -84,8 +138,10 @@ public class WebSocketService : IWebSocketService
                     // Se o servidor enviar um fechamento da conexão
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Conexão encerrada pelo servidor", CancellationToken.None);
-                        Console.WriteLine("Conexão encerrada pelo servidor.");
+                        Console.WriteLine("A parte remota fechou a conexão.");
+
+                        // Tenta reconectar automaticamente
+                        await ReconnectAsync();
                         return string.Empty;
                     }
 
@@ -94,24 +150,32 @@ public class WebSocketService : IWebSocketService
 
                 } while (!result.EndOfMessage);
 
-                // Faz a leitura do MemoryStream após o recebimento completo da mensagem
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 using (var reader = new StreamReader(memoryStream, Encoding.UTF8))
                 {
-                    string response = await reader.ReadToEndAsync();
-                    return response;
+                    var  to_reader = await reader.ReadToEndAsync();
+
+                    Console.WriteLine($"Mensagem recebida: {to_reader}");
+
+                    return to_reader;
                 }
             }
         }
-        catch (WebSocketException ex)
-        {
-            throw new WebSocketException(ex.Message);
-        }
         catch (Exception ex)
         {
-
+            Console.WriteLine($"Erro ao receber a mensagem: {ex.Message}");
             throw new Exception(ex.Message);
         }
+        finally
+        {
+            _receiveSemaphore.Release(); // Libera o bloqueio após a operação
+        }
+    }
+
+    public async Task ReconnectAsync()
+    {
+        // Tentativa de reconectar
+        await ConnectAsync();
     }
 
     public async Task<string> SendMessageReceiveAsync(object message)
@@ -121,14 +185,31 @@ public class WebSocketService : IWebSocketService
             await SendMessageAsync(message);
             return await ReceiveMessageAsync();
         }
-        catch (WebSocketException ex)
+        catch (Exception ex)
         {
-            throw new WebSocketException(ex.Message);
+            Console.WriteLine($"Erro ao enviar e receber mensagem: {ex.Message}");
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task EscutarContinuamenteAsync()
+    {
+        try
+        {
+            // Fica em um loop escutando as mensagens que chegam da API
+            while (true)
+            {
+                string resposta = await ReceiveMessageAsync();
+
+                // Processar a resposta recebida
+                Console.WriteLine($"Mensagem recebida: ********** {resposta}");
+
+                // Lógica para processar as mensagens ou até fazer algo com base nas respostas
+            }
         }
         catch (Exception ex)
         {
-
-            throw new Exception(ex.Message);
+            Console.WriteLine($"Erro durante a escuta contínua: {ex.Message}");
         }
     }
 }
