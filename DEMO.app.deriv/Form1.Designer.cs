@@ -60,6 +60,7 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.btnFiltrar = new System.Windows.Forms.Button();
             this.btnRaiseFail = new System.Windows.Forms.Button();
+            this.btnFrmTick = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtContratos)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -223,7 +224,7 @@
             this.dtContratos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtContratos.Location = new System.Drawing.Point(374, 356);
             this.dtContratos.Name = "dtContratos";
-            this.dtContratos.Size = new System.Drawing.Size(757, 0);
+            this.dtContratos.Size = new System.Drawing.Size(757, 10);
             this.dtContratos.TabIndex = 18;
             // 
             // cmbxUnderlying_symbol
@@ -282,9 +283,9 @@
             this.groupBox1.Controls.Add(this.lblTickValue);
             this.groupBox1.Controls.Add(this.cmbxUnderlying_symbol);
             this.groupBox1.Controls.Add(this.btnFiltrarContratoIndiceVolatividade);
-            this.groupBox1.Location = new System.Drawing.Point(361, 12);
+            this.groupBox1.Location = new System.Drawing.Point(434, 405);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(770, 256);
+            this.groupBox1.Size = new System.Drawing.Size(770, 144);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Contratos Volatility (1s)";
@@ -400,11 +401,22 @@
             this.btnRaiseFail.UseVisualStyleBackColor = true;
             this.btnRaiseFail.Click += new System.EventHandler(this.btnRaiseFail_Click);
             // 
+            // btnFrmTick
+            // 
+            this.btnFrmTick.Location = new System.Drawing.Point(375, 15);
+            this.btnFrmTick.Name = "btnFrmTick";
+            this.btnFrmTick.Size = new System.Drawing.Size(200, 108);
+            this.btnFrmTick.TabIndex = 31;
+            this.btnFrmTick.Text = "Frm TICK";
+            this.btnFrmTick.UseVisualStyleBackColor = true;
+            this.btnFrmTick.Click += new System.EventHandler(this.btnFrmTick_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1143, 272);
+            this.ClientSize = new System.Drawing.Size(1143, 282);
+            this.Controls.Add(this.btnFrmTick);
             this.Controls.Add(this.btnRaiseFail);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -480,6 +492,7 @@
         private System.Windows.Forms.Button btnRaiseFail;
         private System.Windows.Forms.Label lblTickValue;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Button btnFrmTick;
     }
 }
 

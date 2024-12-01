@@ -10,6 +10,7 @@ using DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -106,38 +107,51 @@ namespace DEMO.app.deriv
         #endregion
 
         CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private async void btnFiltrarContratoIndiceVolatividade_Click(object sender, System.EventArgs e)
+        private async void btnFiltrarContratoIndiceVolatividade_Click(object sender, EventArgs e)
         {
             try
             {
                 lblTickValue.Text = "Conectando...";
-                _cancellationTokenSource = new CancellationTokenSource();
-                try
-                {
-                    // Inicia a observação de ticks
-                    await _tickServices.ObserveTicksAsync(cmbxUnderlying_symbol.Text, _cancellationTokenSource.Token, UpdateTickValue);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Erro: {ex.Message}");
-                }
-            }
-            catch (System.Exception ex)
-            {
 
-                MessageBox.Show(ex.Message);
+                // Captura o texto do ComboBox no thread principal
+                string indice = cmbxUnderlying_symbol.Text;
+
+                // Cancela qualquer execução anterior
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                // Executa a observação dos ticks de forma assíncrona
+                await Task.Run(async () =>
+                {
+                    // Observa os ticks de forma assíncrona sem bloquear a thread principal
+                    await _tickServices.ObserveTicksAsync(
+                        indice,
+                        _cancellationTokenSource.Token,
+                        UpdateTickValue
+                    );
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro: {ex.Message}");
             }
         }
+
+
+
+
         private void UpdateTickValue(double tickValue)
         {
-            // Atualiza a Label na thread da interface gráfica
             if (lblTickValue.InvokeRequired)
             {
-                lblTickValue.Invoke(new Action(() => lblTickValue.Text = $"Tick: {tickValue}"));
+                lblTickValue.Invoke(new Action<double>((value) =>
+                {
+                    lblTickValue.Text = value.ToString("F2");
+                }), tickValue);
             }
             else
             {
-                lblTickValue.Text = $"Tick: {tickValue}";
+                lblTickValue.Text = tickValue.ToString("F2");
             }
         }
 
@@ -233,6 +247,14 @@ namespace DEMO.app.deriv
         {
             _cancellationTokenSource?.Cancel();
             lblTickValue.Text = "Observação parada.";
+        }
+
+        private void btnFrmTick_Click(object sender, EventArgs e)
+        {
+            using (FrmTickTeste frm = new FrmTickTeste())
+            {
+                frm.ShowDialog();
+            }
         }
     }
 }

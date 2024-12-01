@@ -46,7 +46,7 @@
             // 
             this.cartesianChart1.Location = new System.Drawing.Point(12, 3);
             this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(935, 282);
+            this.cartesianChart1.Size = new System.Drawing.Size(460, 282);
             this.cartesianChart1.TabIndex = 2;
             this.cartesianChart1.Text = "cartesianChart1";
             // 
@@ -54,7 +54,7 @@
             // 
             this.lblPreco.AutoSize = true;
             this.lblPreco.Font = new System.Drawing.Font("Tahoma", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPreco.Location = new System.Drawing.Point(2, 303);
+            this.lblPreco.Location = new System.Drawing.Point(478, 9);
             this.lblPreco.Name = "lblPreco";
             this.lblPreco.Size = new System.Drawing.Size(150, 58);
             this.lblPreco.TabIndex = 3;
@@ -66,16 +66,16 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flStatusPrecoContrato.BackColor = System.Drawing.Color.White;
-            this.flStatusPrecoContrato.Location = new System.Drawing.Point(12, 364);
+            this.flStatusPrecoContrato.Location = new System.Drawing.Point(12, 286);
             this.flStatusPrecoContrato.Name = "flStatusPrecoContrato";
-            this.flStatusPrecoContrato.Size = new System.Drawing.Size(935, 140);
+            this.flStatusPrecoContrato.Size = new System.Drawing.Size(935, 218);
             this.flStatusPrecoContrato.TabIndex = 4;
             // 
             // lblTempoExecucao
             // 
             this.lblTempoExecucao.AutoSize = true;
             this.lblTempoExecucao.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTempoExecucao.Location = new System.Drawing.Point(277, 328);
+            this.lblTempoExecucao.Location = new System.Drawing.Point(483, 118);
             this.lblTempoExecucao.Name = "lblTempoExecucao";
             this.lblTempoExecucao.Size = new System.Drawing.Size(221, 25);
             this.lblTempoExecucao.TabIndex = 5;
@@ -85,7 +85,7 @@
             // 
             this.lblTick.AutoSize = true;
             this.lblTick.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTick.Location = new System.Drawing.Point(277, 303);
+            this.lblTick.Location = new System.Drawing.Point(483, 78);
             this.lblTick.Name = "lblTick";
             this.lblTick.Size = new System.Drawing.Size(58, 25);
             this.lblTick.TabIndex = 6;

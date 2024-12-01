@@ -114,6 +114,12 @@
     <Compile Include="FrmRiseFail.Designer.cs">
       <DependentUpon>FrmRiseFail.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmTickTeste.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmTickTeste.Designer.cs">
+      <DependentUpon>FrmTickTeste.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextBoxExtension.cs" />
@@ -125,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmRiseFail.resx">
       <DependentUpon>FrmRiseFail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmTickTeste.resx">
+      <DependentUpon>FrmTickTeste.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
