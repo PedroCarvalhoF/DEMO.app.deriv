@@ -2,6 +2,7 @@
 using DEMO.app.deriv.services.Services.DeriviApi.Authorize;
 using DEMO.app.deriv.services.Services.DeriviApi.Contracts;
 using DEMO.app.deriv.services.Services.DeriviApi.ProposalContract;
+using DEMO.app.deriv.services.Services.DeriviApi.Ticks;
 using DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +16,9 @@ namespace DEMO.app.deriv.services.Services
         public static IAuthorizeServices IAuthorizeServices { get; private set; }
         public static IPingMsServices IPingMsServices { get; private set; }
         public static IContractsServices IContractsServices { get; private set; }
-        public static IProposalContractServices IProposalContractServices { get; private set; } 
+        public static IProposalContractServices IProposalContractServices { get; private set; }
+
+        public static ITickServices ITickServices { get; private set; }
 
         private static ServiceCollection ColecaoServico(string idApplicationManager)
         {
@@ -30,6 +33,7 @@ namespace DEMO.app.deriv.services.Services
             serviceCollection.AddSingleton<IPingMsServices, PingMsServices>();
             serviceCollection.AddSingleton<IContractsServices, ContractsServices>();
             serviceCollection.AddSingleton<IProposalContractServices, ProposalContractServices>();
+            serviceCollection.AddSingleton<ITickServices, TickServices>();
 
             return serviceCollection;
         }
@@ -48,6 +52,7 @@ namespace DEMO.app.deriv.services.Services
             IPingMsServices = serviceProvider.GetRequiredService<IPingMsServices>();
             IContractsServices = serviceProvider.GetRequiredService<IContractsServices>();
             IProposalContractServices = serviceProvider.GetRequiredService<IProposalContractServices>();
+            ITickServices = serviceProvider.GetRequiredService<ITickServices>();
         }
     }
 }

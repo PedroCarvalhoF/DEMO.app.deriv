@@ -98,6 +98,10 @@
     <Compile Include="DTOS\ProposalContract\RootObject.cs" />
     <Compile Include="DTOS\ProposalContract\Stake.cs" />
     <Compile Include="DTOS\ProposalContract\ValidationParams.cs" />
+    <Compile Include="DTOS\Ticks\EchoReq.cs" />
+    <Compile Include="DTOS\Ticks\Root.cs" />
+    <Compile Include="DTOS\Ticks\Subscription.cs" />
+    <Compile Include="DTOS\Ticks\Tick.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConexaoAPI\ApiService.cs" />
     <Compile Include="Services\ConexaoAPI\IApiService.cs" />
@@ -109,6 +113,8 @@
     <Compile Include="Services\DeriviApi\Contracts\IContractsServices.cs" />
     <Compile Include="Services\DeriviApi\ProposalContract\IProposalContractServices.cs" />
     <Compile Include="Services\DeriviApi\ProposalContract\ProposalContractServices.cs" />
+    <Compile Include="Services\DeriviApi\Ticks\ITickServices.cs" />
+    <Compile Include="Services\DeriviApi\Ticks\TickServices.cs" />
     <Compile Include="Services\DeriviApi\VelocidadeConexao\IPingMsServices.cs" />
     <Compile Include="Services\DeriviApi\VelocidadeConexao\PingMsServices.cs" />
     <Compile Include="Services\Helpers\StatusCodeHelpers.cs" />

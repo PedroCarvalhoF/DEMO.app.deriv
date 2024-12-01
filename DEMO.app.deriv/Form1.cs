@@ -1,11 +1,17 @@
 ﻿using DEMO.app.deriv.services.DTOS.Authorize;
 using DEMO.app.deriv.services.DTOS.Ping;
+using DEMO.app.deriv.services.DTOS.Ticks;
 using DEMO.app.deriv.services.Services;
 using DEMO.app.deriv.services.Services.ConexaoAPI;
 using DEMO.app.deriv.services.Services.DeriviApi.Authorize;
 using DEMO.app.deriv.services.Services.DeriviApi.Contracts;
+using DEMO.app.deriv.services.Services.DeriviApi.Ticks;
 using DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DEMO.app.deriv
@@ -16,6 +22,7 @@ namespace DEMO.app.deriv
         private IPingMsServices _pingMsServices;
         private IWebSocketService _webSocketServices;
         private IContractsServices _contratosServices;
+        private ITickServices _tickServices;
         public Form1()
         {
             InitializeComponent();
@@ -44,6 +51,8 @@ namespace DEMO.app.deriv
 
         #endregion
         #region Eventos
+
+
         private async void btnLogin_Click(object sender, System.EventArgs e)
         {
             try
@@ -69,10 +78,7 @@ namespace DEMO.app.deriv
                 _pingMsServices = ServicosApp.IPingMsServices;
                 _authorizerServices = ServicosApp.IAuthorizeServices;
                 _contratosServices = ServicosApp.IContractsServices;
-                //verifica conexão
-                //if (!_webSocketServices.GetStatusConexaoWebSockets())
-                //    MessageBox.Show("Sem coneção.");
-
+                _tickServices = ServicosApp.ITickServices;
 
 
                 var result = await _authorizerServices.GetAuthorize(txtToken.Text);
@@ -99,18 +105,39 @@ namespace DEMO.app.deriv
         }
         #endregion
 
+        CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private async void btnFiltrarContratoIndiceVolatividade_Click(object sender, System.EventArgs e)
         {
             try
             {
-                var contratoResult = await _contratosServices.GetAllContratosAsyn(cmbxUnderlying_symbol.Text, cmbxMoeda.Text);
-
-                dtContratos.DataSource = contratoResult.contracts_for.available.ToList();
+                lblTickValue.Text = "Conectando...";
+                _cancellationTokenSource = new CancellationTokenSource();
+                try
+                {
+                    // Inicia a observação de ticks
+                    await _tickServices.ObserveTicksAsync(cmbxUnderlying_symbol.Text, _cancellationTokenSource.Token, UpdateTickValue);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erro: {ex.Message}");
+                }
             }
             catch (System.Exception ex)
             {
 
                 MessageBox.Show(ex.Message);
+            }
+        }
+        private void UpdateTickValue(double tickValue)
+        {
+            // Atualiza a Label na thread da interface gráfica
+            if (lblTickValue.InvokeRequired)
+            {
+                lblTickValue.Invoke(new Action(() => lblTickValue.Text = $"Tick: {tickValue}"));
+            }
+            else
+            {
+                lblTickValue.Text = $"Tick: {tickValue}";
             }
         }
 
@@ -200,6 +227,12 @@ namespace DEMO.app.deriv
 
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            _cancellationTokenSource?.Cancel();
+            lblTickValue.Text = "Observação parada.";
         }
     }
 }

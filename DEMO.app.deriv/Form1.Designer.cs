@@ -50,6 +50,8 @@
             this.cmbxUpsDowns = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.lblTickValue = new System.Windows.Forms.Label();
             this.cmbxMoeda = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lblMoedaSelecionada = new System.Windows.Forms.Label();
@@ -221,7 +223,7 @@
             this.dtContratos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtContratos.Location = new System.Drawing.Point(374, 356);
             this.dtContratos.Name = "dtContratos";
-            this.dtContratos.Size = new System.Drawing.Size(193, 0);
+            this.dtContratos.Size = new System.Drawing.Size(757, 0);
             this.dtContratos.TabIndex = 18;
             // 
             // cmbxUnderlying_symbol
@@ -243,7 +245,7 @@
             // 
             // btnFiltrarContratoIndiceVolatividade
             // 
-            this.btnFiltrarContratoIndiceVolatividade.Location = new System.Drawing.Point(210, 29);
+            this.btnFiltrarContratoIndiceVolatividade.Location = new System.Drawing.Point(84, 65);
             this.btnFiltrarContratoIndiceVolatividade.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnFiltrarContratoIndiceVolatividade.Name = "btnFiltrarContratoIndiceVolatividade";
             this.btnFiltrarContratoIndiceVolatividade.Size = new System.Drawing.Size(120, 30);
@@ -276,14 +278,37 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnStop);
+            this.groupBox1.Controls.Add(this.lblTickValue);
             this.groupBox1.Controls.Add(this.cmbxUnderlying_symbol);
             this.groupBox1.Controls.Add(this.btnFiltrarContratoIndiceVolatividade);
-            this.groupBox1.Location = new System.Drawing.Point(19, 356);
+            this.groupBox1.Location = new System.Drawing.Point(361, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(336, 71);
+            this.groupBox1.Size = new System.Drawing.Size(770, 256);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Contratos Volatility (1s)";
+            // 
+            // btnStop
+            // 
+            this.btnStop.Location = new System.Drawing.Point(6, 65);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(70, 30);
+            this.btnStop.TabIndex = 32;
+            this.btnStop.Text = "stop";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // lblTickValue
+            // 
+            this.lblTickValue.AutoSize = true;
+            this.lblTickValue.Font = new System.Drawing.Font("Arial", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTickValue.Location = new System.Drawing.Point(210, 21);
+            this.lblTickValue.Name = "lblTickValue";
+            this.lblTickValue.Size = new System.Drawing.Size(220, 72);
+            this.lblTickValue.TabIndex = 31;
+            this.lblTickValue.Text = "Indice:";
             // 
             // cmbxMoeda
             // 
@@ -297,7 +322,7 @@
             "JPY",
             "CHF",
             "CAD"});
-            this.cmbxMoeda.Location = new System.Drawing.Point(124, 280);
+            this.cmbxMoeda.Location = new System.Drawing.Point(124, 370);
             this.cmbxMoeda.Name = "cmbxMoeda";
             this.cmbxMoeda.Size = new System.Drawing.Size(231, 25);
             this.cmbxMoeda.TabIndex = 25;
@@ -306,7 +331,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(22, 288);
+            this.label4.Location = new System.Drawing.Point(22, 378);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(51, 17);
             this.label4.TabIndex = 26;
@@ -315,7 +340,7 @@
             // lblMoedaSelecionada
             // 
             this.lblMoedaSelecionada.AutoSize = true;
-            this.lblMoedaSelecionada.Location = new System.Drawing.Point(121, 322);
+            this.lblMoedaSelecionada.Location = new System.Drawing.Point(121, 412);
             this.lblMoedaSelecionada.Name = "lblMoedaSelecionada";
             this.lblMoedaSelecionada.Size = new System.Drawing.Size(135, 17);
             this.lblMoedaSelecionada.TabIndex = 27;
@@ -367,9 +392,9 @@
             // 
             // btnRaiseFail
             // 
-            this.btnRaiseFail.Location = new System.Drawing.Point(374, 9);
+            this.btnRaiseFail.Location = new System.Drawing.Point(19, 370);
             this.btnRaiseFail.Name = "btnRaiseFail";
-            this.btnRaiseFail.Size = new System.Drawing.Size(198, 81);
+            this.btnRaiseFail.Size = new System.Drawing.Size(103, 57);
             this.btnRaiseFail.TabIndex = 30;
             this.btnRaiseFail.Text = "Raise/Fail";
             this.btnRaiseFail.UseVisualStyleBackColor = true;
@@ -379,7 +404,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(579, 315);
+            this.ClientSize = new System.Drawing.Size(1143, 272);
             this.Controls.Add(this.btnRaiseFail);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -413,6 +438,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dtContratos)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -452,6 +478,8 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button btnFiltrar;
         private System.Windows.Forms.Button btnRaiseFail;
+        private System.Windows.Forms.Label lblTickValue;
+        private System.Windows.Forms.Button btnStop;
     }
 }
 
