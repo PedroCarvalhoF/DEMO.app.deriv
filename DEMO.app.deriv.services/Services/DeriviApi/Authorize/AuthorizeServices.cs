@@ -7,9 +7,9 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.Authorize
 {
     public class AuthorizeServices : IAuthorizeServices
     {
-        private readonly WebSocketService _webSocketService;
+        private readonly IWebSocketService _webSocketService;
 
-        public AuthorizeServices(WebSocketService webSocketService)
+        public AuthorizeServices(IWebSocketService webSocketService)
         {
             _webSocketService = webSocketService;
         }
@@ -23,7 +23,7 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.Authorize
                     authorize = token
                 };
 
-                var response = await _webSocketService.SendAndReceiveMessageAsync(tokenAuthorize);
+                var response = await _webSocketService.SendMessageReceiveAsync(tokenAuthorize);
 
                 var authorizeDto = new AuthorizeDto();
 

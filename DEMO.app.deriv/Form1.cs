@@ -1,12 +1,10 @@
-﻿using DEMO.app.deriv.Ferramentas;
-using DEMO.app.deriv.services.DTOS.Authorize;
+﻿using DEMO.app.deriv.services.DTOS.Authorize;
 using DEMO.app.deriv.services.DTOS.Ping;
 using DEMO.app.deriv.services.Services;
 using DEMO.app.deriv.services.Services.ConexaoAPI;
 using DEMO.app.deriv.services.Services.DeriviApi.Authorize;
 using DEMO.app.deriv.services.Services.DeriviApi.Contracts;
 using DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -16,7 +14,7 @@ namespace DEMO.app.deriv
     {
         private IAuthorizeServices _authorizerServices;
         private IPingMsServices _pingMsServices;
-        private WebSocketService _webSocketServices;
+        private IWebSocketService _webSocketServices;
         private IContractsServices _contratosServices;
         public Form1()
         {
@@ -65,15 +63,15 @@ namespace DEMO.app.deriv
                 //realizar conexao
 
 
-                await ServicosApp.WebSocketService.ConnectAsync();
+                await ServicosApp.IWebSocketService.ConnectAsync();
 
-                _webSocketServices = ServicosApp.WebSocketService;
+                _webSocketServices = ServicosApp.IWebSocketService;
                 _pingMsServices = ServicosApp.IPingMsServices;
                 _authorizerServices = ServicosApp.IAuthorizeServices;
                 _contratosServices = ServicosApp.IContractsServices;
                 //verifica conexão
-                if (!_webSocketServices.GetStatusConexaoWebSockets())
-                    MessageBox.Show("Sem coneção.");
+                //if (!_webSocketServices.GetStatusConexaoWebSockets())
+                //    MessageBox.Show("Sem coneção.");
 
 
 

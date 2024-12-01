@@ -133,6 +133,9 @@ namespace DEMO.app.deriv
                 MessageBox.Show(ex.Message);
             }
         }
+
+        int tick = 0;
+        DateTime time_incial = DateTime.Now;
         private async void timer1_Tick(object sender, System.EventArgs e)
         {
             try
@@ -142,13 +145,16 @@ namespace DEMO.app.deriv
                 //_values.Add(Convert.ToDouble(resultContract.proposal.spot));
 
 
-                var resultContract = await _proposalContractServices.GetProposalResponseApenasValorAsync();
-                lblPreco.Text = resultContract.ToString();
-                var preco = Convert.ToDouble(resultContract);
+                var resultContract = await _proposalContractServices.GetProposalResponseAsync();
+                tick += 1;
+                lblPreco.Text = resultContract.proposal.spot.ToString();
+                var preco = Convert.ToDouble(resultContract.proposal.spot.ToString());
 
                 _values.Add(preco);
                 AddSetaStatusContrato(preco);
 
+                lblTick.Text = $"Tick: {tick}";
+                lblTempoExecucao.Text = $"Tempo de Execução: {DateTime.Now - time_incial}";
 
             }
             catch (System.Exception ex)

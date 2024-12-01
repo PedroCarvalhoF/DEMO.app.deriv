@@ -11,7 +11,7 @@ namespace DEMO.app.deriv.services.Services
     {
         private static ServiceCollection serviceCollection;
         public static IApiService IApiService { get; set; }
-        public static WebSocketService WebSocketService { get; private set; }
+        public static IWebSocketService IWebSocketService { get; private set; }
         public static IAuthorizeServices IAuthorizeServices { get; private set; }
         public static IPingMsServices IPingMsServices { get; private set; }
         public static IContractsServices IContractsServices { get; private set; }
@@ -21,7 +21,7 @@ namespace DEMO.app.deriv.services.Services
         {
             serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IApiService, ApiService>();
-            serviceCollection.AddSingleton<WebSocketService>(provider =>
+            serviceCollection.AddSingleton<IWebSocketService>(provider =>
             {
                 string appId = "66069"; // Substitua pelo seu App ID
                 return new WebSocketService(appId);
@@ -43,7 +43,7 @@ namespace DEMO.app.deriv.services.Services
         {
             ServiceProvider serviceProvider = ColecaoServico(idApplicationManager).BuildServiceProvider();
             IApiService = serviceProvider.GetRequiredService<IApiService>();
-            WebSocketService = serviceProvider.GetRequiredService<WebSocketService>();
+            IWebSocketService = serviceProvider.GetRequiredService<IWebSocketService>();
             IAuthorizeServices = serviceProvider.GetRequiredService<IAuthorizeServices>();
             IPingMsServices = serviceProvider.GetRequiredService<IPingMsServices>();
             IContractsServices = serviceProvider.GetRequiredService<IContractsServices>();

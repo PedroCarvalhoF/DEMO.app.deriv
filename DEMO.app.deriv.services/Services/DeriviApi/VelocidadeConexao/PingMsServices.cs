@@ -7,9 +7,9 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao
 {
     public class PingMsServices : IPingMsServices
     {
-        private readonly WebSocketService _webSocketService;
+        private readonly IWebSocketService _webSocketService;
 
-        public PingMsServices(WebSocketService webSocketService)
+        public PingMsServices(IWebSocketService webSocketService)
         {
             _webSocketService = webSocketService;
         }
@@ -23,7 +23,7 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao
                     ping = 1
                 };
 
-                var response = await _webSocketService.SendAndReceiveMessageAsync(pingMs);
+                var response = await _webSocketService.SendMessageReceiveAsync(pingMs);
 
                 var dtoPing = new PingDto();
 

@@ -7,9 +7,9 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.Contracts
 {
     public class ContractsServices : IContractsServices
     {
-        private readonly WebSocketService _webSocketService;
+        private readonly IWebSocketService _webSocketService;
 
-        public ContractsServices(WebSocketService webSocketService)
+        public ContractsServices(IWebSocketService webSocketService)
         {
             _webSocketService = webSocketService;
         }
@@ -26,7 +26,7 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.Contracts
                     product_type = "basic"
                 };
 
-                var json = await _webSocketService.SendAndReceiveMessageAsync(contratos);
+                var json = await _webSocketService.SendMessageReceiveAsync(contratos);
 
                 var responseDto = JsonSerializer.Deserialize<Root>(json);
 

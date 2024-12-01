@@ -1,5 +1,4 @@
-﻿using DEMO.app.deriv.services.DTOS.Authorize;
-using DEMO.app.deriv.services.DTOS.ProposalContract;
+﻿using DEMO.app.deriv.services.DTOS.ProposalContract;
 using DEMO.app.deriv.services.Services.ConexaoAPI;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -8,8 +7,8 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.ProposalContract
 {
     public class ProposalContractServices : IProposalContractServices
     {
-        private readonly WebSocketService _webSocketService;
-        public ProposalContractServices(WebSocketService webSocketService)
+        private readonly IWebSocketService _webSocketService;
+        public ProposalContractServices(IWebSocketService webSocketService)
         {
             _webSocketService = webSocketService;
         }
@@ -30,7 +29,7 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.ProposalContract
                     symbol = "R_10"
                 };
 
-                var jsonResponse = await _webSocketService.SendAndReceiveMessageAsync(volatily10);
+                var jsonResponse = await _webSocketService.SendMessageReceiveAsync(volatily10);
 
                 using (JsonDocument document = JsonDocument.Parse(jsonResponse))
                 {
@@ -71,7 +70,7 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.ProposalContract
                     symbol = "R_10"
                 };
 
-                var jsonResponse = await _webSocketService.SendAndReceiveMessageAsync(volatily10);
+                var jsonResponse = await _webSocketService.SendMessageReceiveAsync(volatily10);
 
                 var proposalResponse = JsonSerializer.Deserialize<RootObject>(jsonResponse);
 

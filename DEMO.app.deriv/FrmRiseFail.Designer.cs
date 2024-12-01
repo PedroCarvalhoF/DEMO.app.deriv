@@ -33,11 +33,13 @@
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             this.lblPreco = new System.Windows.Forms.Label();
             this.flStatusPrecoContrato = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblTempoExecucao = new System.Windows.Forms.Label();
+            this.lblTick = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // timer1
             // 
-            this.timer1.Interval = 500;
+            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // cartesianChart1
@@ -69,11 +71,33 @@
             this.flStatusPrecoContrato.Size = new System.Drawing.Size(935, 140);
             this.flStatusPrecoContrato.TabIndex = 4;
             // 
+            // lblTempoExecucao
+            // 
+            this.lblTempoExecucao.AutoSize = true;
+            this.lblTempoExecucao.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTempoExecucao.Location = new System.Drawing.Point(277, 328);
+            this.lblTempoExecucao.Name = "lblTempoExecucao";
+            this.lblTempoExecucao.Size = new System.Drawing.Size(221, 25);
+            this.lblTempoExecucao.TabIndex = 5;
+            this.lblTempoExecucao.Text = "Tempo de Execução: ";
+            // 
+            // lblTick
+            // 
+            this.lblTick.AutoSize = true;
+            this.lblTick.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTick.Location = new System.Drawing.Point(277, 303);
+            this.lblTick.Name = "lblTick";
+            this.lblTick.Size = new System.Drawing.Size(58, 25);
+            this.lblTick.TabIndex = 6;
+            this.lblTick.Text = "Tick:";
+            // 
             // FrmRiseFail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(959, 516);
+            this.Controls.Add(this.lblTick);
+            this.Controls.Add(this.lblTempoExecucao);
             this.Controls.Add(this.flStatusPrecoContrato);
             this.Controls.Add(this.lblPreco);
             this.Controls.Add(this.cartesianChart1);
@@ -92,5 +116,7 @@
         private LiveCharts.WinForms.CartesianChart cartesianChart1;
         private System.Windows.Forms.Label lblPreco;
         private System.Windows.Forms.FlowLayoutPanel flStatusPrecoContrato;
+        private System.Windows.Forms.Label lblTempoExecucao;
+        private System.Windows.Forms.Label lblTick;
     }
 }
