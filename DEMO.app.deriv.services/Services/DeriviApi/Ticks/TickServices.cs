@@ -65,97 +65,84 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.Ticks
             }
         }
 
+        public void ObserverTickCancelar() => observarTickEnable = false;
+        private bool observarTickEnable = true;
+        private double _tick = 0;
+        public double GetTick() => _tick;
         public async Task ObserveTicksAsync(string indice, CancellationToken cancellationToken, Action<double> onTickReceived)
         {
-            try
+            while (!cancellationToken.IsCancellationRequested)
             {
-                while (!cancellationToken.IsCancellationRequested)
+                try
                 {
-                    try
+                    while (webSocket.State != WebSocketState.Open)
                     {
-                        // Conecta ou reconecta o WebSocket
-                        if (!ConexaoOpem)
-                        {
-                            await CriarConexao(indice, cancellationToken, onTickReceived);
-                        }
-
-                        while (webSocket.State == WebSocketState.Open || webSocket.State == WebSocketState.Closed)
-                        {
-                            try
-                            {
-                                if (webSocket.State == WebSocketState.Closed)
-                                {
-                                    Console.WriteLine("WebSocket fechado.");
-                                    await ReconectarConexao(indice, cancellationToken, onTickReceived);
-                                    Console.WriteLine("Atualizando variável para enviar novamente o comando.");
-                                    commandEnviado = false;
-                                }
-
-                                if (!commandEnviado)
-                                {
-                                    // Envia o comando de assinatura se ainda não foi enviado
-                                    var subscriptionRequest = new { ticks = indice, subscribe = 1 };
-                                    string requestMessage = JsonSerializer.Serialize(subscriptionRequest);
-                                    var requestBytes = Encoding.UTF8.GetBytes(requestMessage);
-                                    var requestSegment = new ArraySegment<byte>(requestBytes);
-
-                                    await webSocket.SendAsync(requestSegment, WebSocketMessageType.Text, true, cancellationToken);
-                                    commandEnviado = true;
-                                }
-
-                                var buffer = new byte[8192];
-
-                                // Recebe mensagens do WebSocket
-                                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
-
-                                if (result.MessageType == WebSocketMessageType.Close)
-                                {
-                                    Console.WriteLine("WebSocket connection closed by server.");
-                                    break; // Sai do loop para reconectar
-                                }
-
-                                string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-
-                                // Processa a mensagem de tick
-                                using (JsonDocument document = JsonDocument.Parse(message))
-                                {
-                                    JsonElement root = document.RootElement;
-
-                                    if (root.TryGetProperty("tick", out JsonElement tickElement) &&
-                                        tickElement.TryGetProperty("quote", out JsonElement quoteElement))
-                                    {
-                                        double quote = quoteElement.GetDouble();
-                                        Console.WriteLine($"Tick: {quote}");
-                                        onTickReceived?.Invoke(quote);
-                                    }
-                                }
-                            }
-                            catch (WebSocketException ex)
-                            {
-                                Console.WriteLine($"Erro WebSocket: {ex.Message}. Tentando reconectar...");
-                                await Task.Delay(1000, cancellationToken); // Pequeno atraso antes de tentar novamente
-                                continue;  // Isso vai voltar para o topo do loop externo, recomeçando a execução
-                            }
-                        }
+                        Console.WriteLine("WebSocket fechado.");
+                        await ReconectarConexao(indice, cancellationToken, onTickReceived);
+                        commandEnviado = false;
                     }
-                    catch (Exception ex)
+
+                    if (!commandEnviado)
                     {
-                        Console.WriteLine($"Erro não esperado: {ex.Message}");
-                        await Task.Delay(1000, cancellationToken); // Espera um tempo e tenta novamente
-                        continue; // Volta para o início do loop principal, reiniciando o processo de conexão
+                        // Envia o comando de assinatura se ainda não foi enviado
+                        Console.WriteLine("Enviando requisição para receber Tick.");
+                        var subscriptionRequest = new { ticks = indice, subscribe = 1 };
+                        string requestMessage = JsonSerializer.Serialize(subscriptionRequest);
+                        var requestBytes = Encoding.UTF8.GetBytes(requestMessage);
+                        var requestSegment = new ArraySegment<byte>(requestBytes);
+
+                        await webSocket.SendAsync(requestSegment, WebSocketMessageType.Text, true, cancellationToken);
+                        commandEnviado = true;
+                        Console.WriteLine($"Requisição enviada: {requestMessage}");
+                    }
+
+                    var buffer = new byte[8192];
+
+                    // Recebe mensagens do WebSocket
+                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
+
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        Console.WriteLine("WebSocket connection closed by server.");
+                        break; // Sai do loop para reconectar
+                    }
+
+                    string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+
+                    // Processa a mensagem de tick
+                    using (JsonDocument document = JsonDocument.Parse(message))
+                    {
+                        JsonElement root = document.RootElement;
+
+                        if (root.TryGetProperty("tick", out JsonElement tickElement) &&
+                            tickElement.TryGetProperty("quote", out JsonElement quoteElement))
+                        {
+                            double quote = quoteElement.GetDouble();
+                            Console.WriteLine($"Tick: {quote}");
+                            _tick = quote;
+                            onTickReceived?.Invoke(quote);
+                        }
                     }
                 }
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine("Observação de ticks foi cancelada.");
+                    break;
+                }
+                catch (WebSocketException ex)
+                {
+                    commandEnviado = false;
+                    Console.WriteLine($"Erro WebSocket: {ex.Message}. Tentando reconectar...");
+                }
+                catch (Exception ex)
+                {
+                    commandEnviado = false;
+                    Console.WriteLine($"Erro inesperado: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro geral: {ex.Message}");
-            }
+
+            Console.WriteLine("Observação parada.");
         }
-
-
-
-
-
 
         private async Task ReceiveTicksAsync(ClientWebSocket webSocket, CancellationToken cancellationToken)
         {

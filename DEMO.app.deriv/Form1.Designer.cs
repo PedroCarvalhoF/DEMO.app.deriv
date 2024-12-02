@@ -44,27 +44,15 @@
             this.txtSaldoFinal = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPingMs = new System.Windows.Forms.TextBox();
-            this.dtContratos = new System.Windows.Forms.DataGridView();
             this.cmbxUnderlying_symbol = new System.Windows.Forms.ComboBox();
             this.btnFiltrarContratoIndiceVolatividade = new System.Windows.Forms.Button();
-            this.cmbxUpsDowns = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpVolatilities = new System.Windows.Forms.GroupBox();
             this.btnStop = new System.Windows.Forms.Button();
             this.lblTickValue = new System.Windows.Forms.Label();
-            this.cmbxMoeda = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lblMoedaSelecionada = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.btnFiltrar = new System.Windows.Forms.Button();
-            this.btnRaiseFail = new System.Windows.Forms.Button();
-            this.btnFrmTick = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dtContratos)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.btnTickManual = new System.Windows.Forms.Button();
+            this.lblTickManual = new System.Windows.Forms.Label();
+            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.grpVolatilities.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtToken
@@ -216,17 +204,6 @@
             this.txtPingMs.TabIndex = 16;
             this.txtPingMs.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // dtContratos
-            // 
-            this.dtContratos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtContratos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtContratos.Location = new System.Drawing.Point(374, 356);
-            this.dtContratos.Name = "dtContratos";
-            this.dtContratos.Size = new System.Drawing.Size(757, 10);
-            this.dtContratos.TabIndex = 18;
-            // 
             // cmbxUnderlying_symbol
             // 
             this.cmbxUnderlying_symbol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -241,57 +218,39 @@
             "R_250"});
             this.cmbxUnderlying_symbol.Location = new System.Drawing.Point(6, 33);
             this.cmbxUnderlying_symbol.Name = "cmbxUnderlying_symbol";
-            this.cmbxUnderlying_symbol.Size = new System.Drawing.Size(198, 25);
+            this.cmbxUnderlying_symbol.Size = new System.Drawing.Size(324, 25);
             this.cmbxUnderlying_symbol.TabIndex = 19;
+            this.cmbxUnderlying_symbol.SelectedIndexChanged += new System.EventHandler(this.cmbxUnderlying_symbol_SelectedIndexChanged);
             // 
             // btnFiltrarContratoIndiceVolatividade
             // 
             this.btnFiltrarContratoIndiceVolatividade.Location = new System.Drawing.Point(84, 65);
             this.btnFiltrarContratoIndiceVolatividade.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnFiltrarContratoIndiceVolatividade.Name = "btnFiltrarContratoIndiceVolatividade";
-            this.btnFiltrarContratoIndiceVolatividade.Size = new System.Drawing.Size(120, 30);
+            this.btnFiltrarContratoIndiceVolatividade.Size = new System.Drawing.Size(246, 30);
             this.btnFiltrarContratoIndiceVolatividade.TabIndex = 20;
-            this.btnFiltrarContratoIndiceVolatividade.Text = "Filtrar";
+            this.btnFiltrarContratoIndiceVolatividade.Text = "Tick";
             this.btnFiltrarContratoIndiceVolatividade.UseVisualStyleBackColor = true;
             this.btnFiltrarContratoIndiceVolatividade.Click += new System.EventHandler(this.btnFiltrarContratoIndiceVolatividade_Click);
             // 
-            // cmbxUpsDowns
+            // grpVolatilities
             // 
-            this.cmbxUpsDowns.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbxUpsDowns.FormattingEnabled = true;
-            this.cmbxUpsDowns.Items.AddRange(new object[] {
-            "Rise/Fall Equal"});
-            this.cmbxUpsDowns.Location = new System.Drawing.Point(6, 24);
-            this.cmbxUpsDowns.Name = "cmbxUpsDowns";
-            this.cmbxUpsDowns.Size = new System.Drawing.Size(198, 25);
-            this.cmbxUpsDowns.TabIndex = 22;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(210, 20);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(120, 30);
-            this.button1.TabIndex = 23;
-            this.button1.Text = "Filtrar";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.btnStop);
-            this.groupBox1.Controls.Add(this.lblTickValue);
-            this.groupBox1.Controls.Add(this.cmbxUnderlying_symbol);
-            this.groupBox1.Controls.Add(this.btnFiltrarContratoIndiceVolatividade);
-            this.groupBox1.Location = new System.Drawing.Point(434, 405);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(770, 144);
-            this.groupBox1.TabIndex = 24;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Contratos Volatility (1s)";
+            this.grpVolatilities.Controls.Add(this.lblTickManual);
+            this.grpVolatilities.Controls.Add(this.btnStop);
+            this.grpVolatilities.Controls.Add(this.cmbxUnderlying_symbol);
+            this.grpVolatilities.Controls.Add(this.btnTickManual);
+            this.grpVolatilities.Controls.Add(this.btnFiltrarContratoIndiceVolatividade);
+            this.grpVolatilities.Enabled = false;
+            this.grpVolatilities.Location = new System.Drawing.Point(19, 286);
+            this.grpVolatilities.Name = "grpVolatilities";
+            this.grpVolatilities.Size = new System.Drawing.Size(336, 137);
+            this.grpVolatilities.TabIndex = 24;
+            this.grpVolatilities.TabStop = false;
+            this.grpVolatilities.Text = "Contratos Volatility";
             // 
             // btnStop
             // 
+            this.btnStop.Enabled = false;
             this.btnStop.Location = new System.Drawing.Point(6, 65);
             this.btnStop.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnStop.Name = "btnStop";
@@ -305,126 +264,53 @@
             // 
             this.lblTickValue.AutoSize = true;
             this.lblTickValue.Font = new System.Drawing.Font("Arial", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTickValue.Location = new System.Drawing.Point(210, 21);
+            this.lblTickValue.Location = new System.Drawing.Point(368, 9);
             this.lblTickValue.Name = "lblTickValue";
             this.lblTickValue.Size = new System.Drawing.Size(220, 72);
             this.lblTickValue.TabIndex = 31;
             this.lblTickValue.Text = "Indice:";
             // 
-            // cmbxMoeda
+            // btnTickManual
             // 
-            this.cmbxMoeda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbxMoeda.FormattingEnabled = true;
-            this.cmbxMoeda.Items.AddRange(new object[] {
-            "USD",
-            "EUR",
-            "GBP",
-            "AUD",
-            "JPY",
-            "CHF",
-            "CAD"});
-            this.cmbxMoeda.Location = new System.Drawing.Point(124, 370);
-            this.cmbxMoeda.Name = "cmbxMoeda";
-            this.cmbxMoeda.Size = new System.Drawing.Size(231, 25);
-            this.cmbxMoeda.TabIndex = 25;
-            this.cmbxMoeda.SelectedIndexChanged += new System.EventHandler(this.cmbxMoeda_SelectedIndexChanged);
+            this.btnTickManual.Enabled = false;
+            this.btnTickManual.Location = new System.Drawing.Point(132, 103);
+            this.btnTickManual.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnTickManual.Name = "btnTickManual";
+            this.btnTickManual.Size = new System.Drawing.Size(198, 25);
+            this.btnTickManual.TabIndex = 32;
+            this.btnTickManual.Text = "Get Tick Manual";
+            this.btnTickManual.UseVisualStyleBackColor = true;
+            this.btnTickManual.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label4
+            // lblTickManual
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(22, 378);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 17);
-            this.label4.TabIndex = 26;
-            this.label4.Text = "Moeda";
+            this.lblTickManual.AutoSize = true;
+            this.lblTickManual.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTickManual.Location = new System.Drawing.Point(5, 104);
+            this.lblTickManual.Name = "lblTickManual";
+            this.lblTickManual.Size = new System.Drawing.Size(103, 22);
+            this.lblTickManual.TabIndex = 33;
+            this.lblTickManual.Text = "TickManual";
             // 
-            // lblMoedaSelecionada
+            // cartesianChart1
             // 
-            this.lblMoedaSelecionada.AutoSize = true;
-            this.lblMoedaSelecionada.Location = new System.Drawing.Point(121, 412);
-            this.lblMoedaSelecionada.Name = "lblMoedaSelecionada";
-            this.lblMoedaSelecionada.Size = new System.Drawing.Size(135, 17);
-            this.lblMoedaSelecionada.TabIndex = 27;
-            this.lblMoedaSelecionada.Text = "Moeda Selecionada";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.cmbxUpsDowns);
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Location = new System.Drawing.Point(19, 433);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(336, 62);
-            this.groupBox2.TabIndex = 28;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Ups & Downs";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.comboBox1);
-            this.groupBox3.Controls.Add(this.btnFiltrar);
-            this.groupBox3.Location = new System.Drawing.Point(19, 501);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(336, 62);
-            this.groupBox3.TabIndex = 29;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Higher & Lows";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Touch/No Touch"});
-            this.comboBox1.Location = new System.Drawing.Point(6, 24);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(198, 25);
-            this.comboBox1.TabIndex = 22;
-            // 
-            // btnFiltrar
-            // 
-            this.btnFiltrar.Location = new System.Drawing.Point(210, 20);
-            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnFiltrar.Name = "btnFiltrar";
-            this.btnFiltrar.Size = new System.Drawing.Size(120, 30);
-            this.btnFiltrar.TabIndex = 23;
-            this.btnFiltrar.Text = "Filtrar";
-            this.btnFiltrar.UseVisualStyleBackColor = true;
-            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
-            // 
-            // btnRaiseFail
-            // 
-            this.btnRaiseFail.Location = new System.Drawing.Point(19, 370);
-            this.btnRaiseFail.Name = "btnRaiseFail";
-            this.btnRaiseFail.Size = new System.Drawing.Size(103, 57);
-            this.btnRaiseFail.TabIndex = 30;
-            this.btnRaiseFail.Text = "Raise/Fail";
-            this.btnRaiseFail.UseVisualStyleBackColor = true;
-            this.btnRaiseFail.Click += new System.EventHandler(this.btnRaiseFail_Click);
-            // 
-            // btnFrmTick
-            // 
-            this.btnFrmTick.Location = new System.Drawing.Point(375, 15);
-            this.btnFrmTick.Name = "btnFrmTick";
-            this.btnFrmTick.Size = new System.Drawing.Size(200, 108);
-            this.btnFrmTick.TabIndex = 31;
-            this.btnFrmTick.Text = "Frm TICK";
-            this.btnFrmTick.UseVisualStyleBackColor = true;
-            this.btnFrmTick.Click += new System.EventHandler(this.btnFrmTick_Click);
+            this.cartesianChart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cartesianChart1.Location = new System.Drawing.Point(380, 84);
+            this.cartesianChart1.Name = "cartesianChart1";
+            this.cartesianChart1.Size = new System.Drawing.Size(751, 339);
+            this.cartesianChart1.TabIndex = 32;
+            this.cartesianChart1.Text = "cartesianChart1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1143, 282);
-            this.Controls.Add(this.btnFrmTick);
-            this.Controls.Add(this.btnRaiseFail);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.lblMoedaSelecionada);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.cmbxMoeda);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.dtContratos);
+            this.ClientSize = new System.Drawing.Size(1143, 627);
+            this.Controls.Add(this.cartesianChart1);
+            this.Controls.Add(this.lblTickValue);
+            this.Controls.Add(this.grpVolatilities);
             this.Controls.Add(this.txtPingMs);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtSaldoFinal);
@@ -448,11 +334,8 @@
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dtContratos)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
+            this.grpVolatilities.ResumeLayout(false);
+            this.grpVolatilities.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -476,23 +359,14 @@
         private System.Windows.Forms.TextBox txtSaldoFinal;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtPingMs;
-        private System.Windows.Forms.DataGridView dtContratos;
         private System.Windows.Forms.ComboBox cmbxUnderlying_symbol;
         private System.Windows.Forms.Button btnFiltrarContratoIndiceVolatividade;
-        private System.Windows.Forms.ComboBox cmbxUpsDowns;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ComboBox cmbxMoeda;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label lblMoedaSelecionada;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button btnFiltrar;
-        private System.Windows.Forms.Button btnRaiseFail;
+        private System.Windows.Forms.GroupBox grpVolatilities;
         private System.Windows.Forms.Label lblTickValue;
         private System.Windows.Forms.Button btnStop;
-        private System.Windows.Forms.Button btnFrmTick;
+        private System.Windows.Forms.Button btnTickManual;
+        private System.Windows.Forms.Label lblTickManual;
+        private LiveCharts.WinForms.CartesianChart cartesianChart1;
     }
 }
 
