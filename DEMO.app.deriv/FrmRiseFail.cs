@@ -1,10 +1,15 @@
-﻿using DEMO.app.deriv.Controles;
-using DEMO.app.deriv.services.Services;
-using DEMO.app.deriv.services.Services.DeriviApi.ProposalContract;
+﻿using DEMO.app.deriv.services.DTOS.Authorize;
+using DEMO.app.deriv.services.DTOS.Ping;
+using DEMO.app.deriv.services.Services.DeriviApi.Authorize;
+using DEMO.app.deriv.services.Services.DeriviApi.Ticks;
+using DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao;
+using DEMO.app.deriv.services.Tools;
 using LiveCharts;
-using LiveCharts.Wpf;
 using System;
-using System.Net.NetworkInformation;
+using System.Diagnostics;
+using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,178 +18,274 @@ namespace DEMO.app.deriv
 {
     public partial class FrmRiseFail : Form
     {
-        private readonly IProposalContractServices _proposalContractServices;
+        private ITickServices _tickServices;
+        private IAuthorizeServices _authorizeServices;
+        private IPingMsServices _pingMsServices;
+        private ChartValues<double> _values;
+        private int contador_tick_compra = 1;
 
-        //private Timer _timer;
-        private ChartValues<double> _values; // Substituído ObservableCollection por ChartValues
-        private int _tickCounter;
-
-        public FrmRiseFail()
+        #region Metodos teste antes de criar o servico
+        public async Task ExecuteRiseFallTrade(string token, string symbol_contract, double stake, int duration_tick_time, string durationUnit, string contractType)
         {
-            InitializeComponent();
+            var stop_wathc = Stopwatch.StartNew();
 
-            _proposalContractServices = ServicosApp.IProposalContractServices;
-            _values = new ChartValues<double>();
+            using (var webSocket = new ClientWebSocket())
+            {
+                LogTools.CwTools("Realizando conexão com WebSockt Deriv");
+                await webSocket.ConnectAsync(new Uri(ApiUrl), CancellationToken.None);
 
-            formatarChart();
+                // Autenticar
+                var authMessage = new { authorize = token };
+                LogTools.CwTools("Autenticando usuário com token");
+                await SendMessage(webSocket, authMessage);
+                LogTools.CwTools("Recebendo reposta do token");
+                var response = await ReceiveMessage(webSocket);
+                LogTools.CwTools($"Reposta: {response}");
+
+                LogTools.CwTools("Configurando prospota de compra");
+                // Mensagem de compra
+                var buyMessage = new
+                {
+                    proposal = 1,
+                    amount = stake,
+                    basis = "stake",
+                    contract_type = contractType,
+                    currency = "USD", // padrao no momento 
+                    duration = duration_tick_time,
+                    duration_unit = "t",
+                    symbol = symbol_contract
+                };
+
+                LogTools.CwTools("Enviando proposta de compra");
+                //enviando solicitacao de proposta
+                await SendMessage(webSocket, buyMessage);
+
+                string id_proposal = string.Empty;
+
+
+                LogTools.CwTools("Recebendo resposta do contrato");
+                var buffer = new byte[8192];
+                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+
+
+                LogTools.CwTools($"Proposta recebida: {message}");
+                using (JsonDocument document = JsonDocument.Parse(message))
+                {
+                    JsonElement root = document.RootElement;
+                    if (root.TryGetProperty("proposal", out JsonElement proposal))
+                    {
+
+                        if (proposal.TryGetProperty("id", out JsonElement idElemente))
+                        {
+
+                            id_proposal = idElemente.GetString();
+                        }
+                    }
+                }
+
+                //recebendo retorno da proposta
+
+                //stop_wathc.Stop();
+                LogTools.CwTools($"ID da proposta recebido em : {stop_wathc.ElapsedMilliseconds} ms");
+
+                var buyProposal = new
+                {
+                    buy = id_proposal,
+                    price = stake
+                };
+
+                await SendMessage(webSocket, buyProposal);
+
+                LogTools.CwTools("Compra finalizada.");
+                var bufferbuyProposal = new byte[1024 * 4];
+                var resultbuyProposal = await webSocket.ReceiveAsync(new ArraySegment<byte>(bufferbuyProposal), CancellationToken.None);
+
+                string messagebuyProposal = Encoding.UTF8.GetString(bufferbuyProposal, 0, resultbuyProposal.Count);
+                LogTools.CwTools($"Resulta operacao de compra: {messagebuyProposal}");
+
+                stop_wathc.Stop();
+                LogTools.CwTools($"Operação finalizada em : {stop_wathc.ElapsedMilliseconds} ms");
+            }
         }
 
-        private bool _isRunning;
-        private CancellationTokenSource _cancellationTokenSource;
-        private async Task StartFetchingAsync()
+        private async Task SendMessage(ClientWebSocket webSocket, object message)
         {
-            if (_isRunning)
-                return; // Evita múltiplas execuções simultâneas
+            string jsonMessage = JsonSerializer.Serialize(message);
+            byte[] buffer = Encoding.UTF8.GetBytes(jsonMessage);
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
 
-            _isRunning = true;
-            _cancellationTokenSource = new CancellationTokenSource();
+        private async Task<string> ReceiveMessage(ClientWebSocket webSocket)
+        {
+            var buffer = new byte[8192];
+            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            return Encoding.UTF8.GetString(buffer, 0, result.Count);
+        }
+        #endregion
 
-            var token = _cancellationTokenSource.Token;
-            time_incial = DateTime.Now;
+        //TESTE
+
+        private const string ApiUrl = "wss://ws.derivws.com/websockets/v3?app_id=66069";
+
+        public FrmRiseFail(ITickServices _tickServices, IAuthorizeServices authorize, IPingMsServices _pingMsServices, string token, decimal valor_saldo_incial)
+        {
+            this._tickServices = _tickServices;
+            this._authorizeServices = authorize;
+            this._pingMsServices = _pingMsServices;
+            this.valor_saldo_incial = valor_saldo_incial;
+            _values = new ChartValues<double>();
+
+            InitializeComponent();
+
+            txtToken.Text = token;
+        }
+        private async void FrmRiseFail_Load(object sender, System.EventArgs e)
+        {
+            var result = await _authorizeServices.GetAuthorize(txtToken.Text);
+
+            var resultPingMs = await _pingMsServices.GetPingMs();
+
+            AtualizarCamposAuthorizeDto(result, resultPingMs);
+            cmbxUnderlying_symbol.SelectedIndex = 0;
+        }
+
+        decimal valor_saldo_incial = 0;
+        decimal valor_saldo_final = 0;
+        decimal valor_saldo_atual = 0;
+        private void AtualizarCamposAuthorizeDto(AuthorizeDto dto, PingDto pingMs)
+        {
+            if (dto == null) return;
+
+            txtSaldoInicial.Text = dto.balance.ToString();
+            txtPingMs.Text = pingMs.ping.ToString();
+
+            valor_saldo_atual = dto.balance;
+            valor_saldo_final = valor_saldo_atual - valor_saldo_incial;
+
+            txtSaldoFinal.Text = valor_saldo_incial.ToString();
+        }
+
+        private void btnAddTick_Click(object sender, System.EventArgs e)
+        {
+            QtdTickAdicionarRemover(1);
+        }
+
+        private void btnRemoveTick_Click(object sender, System.EventArgs e)
+        {
+            QtdTickAdicionarRemover(-1);
+        }
+
+        private void QtdTickAdicionarRemover(int addContador)
+        {
+            contador_tick_compra += addContador;
+            if (contador_tick_compra < 1)
+                contador_tick_compra = 1;
+
+            if (contador_tick_compra > 10)
+                contador_tick_compra = 10;
+
+            lblQtdTick.Text = $"{contador_tick_compra} Ticks";
+        }
+        CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private async void btnFiltrarContratoIndiceVolatividade_Click(object sender, EventArgs e)
+        {
 
             try
             {
-                while (!token.IsCancellationRequested)
+                lblTickValue.Text = "Conectando...";
+                btnStop.Enabled = true;
+
+                btnFiltrarContratoIndiceVolatividade.Enabled = false;
+                cmbxUnderlying_symbol.Enabled = false;
+
+                // Captura o texto do ComboBox no thread principal
+                string indice = cmbxUnderlying_symbol.Text;
+
+                if (string.IsNullOrWhiteSpace(indice))
                 {
-                    try
-                    {
-                        // Obtém os dados do serviço
-                        var resultContract = await _proposalContractServices.GetProposalResponseAsync();
-                        tick += 1;
-
-                        // Atualiza os valores e UI
-                        lblPreco.Text = resultContract.proposal.spot.ToString();
-                        var preco = Convert.ToDouble(resultContract.proposal.spot);
-                        _values.Add(preco);
-                        AddSetaStatusContrato(preco);
-
-                        lblTick.Text = $"Tick: {tick}";
-                        lblTempoExecucao.Text = $"Tempo de Execução: {DateTime.Now - time_incial}";
-
-                        // Aguarda o próximo intervalo (ex.: 1 segundo)
-                        await Task.Delay(1000, token);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        // Ignora exceção se a tarefa for cancelada
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Erro Capturado dentro do loop assíncrono: " + ex.Message);
-                    }
+                    MessageBox.Show("Por favor, selecione um índice válido.");
+                    return;
                 }
+
+                // Cancela qualquer execução anterior
+                _cancellationTokenSource?.Cancel();
+
+                // Cria uma nova fonte de token
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                // Observa os ticks de forma assíncrona sem bloquear a thread principal
+                await _tickServices.ObserveTicksAsync(
+                    indice,
+                    _cancellationTokenSource.Token,
+                    UpdateTickValue
+                );
+
+
+
             }
-            finally
+            catch (OperationCanceledException)
             {
-                _isRunning = false;
+                lblTickValue.Text = "Observação cancelada.";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro: {ex.Message}");
             }
         }
-        public void StopFetching()
-        {
-            _cancellationTokenSource?.Cancel();
-            _isRunning = false;
-        }
 
-        private void formatarChart()
+        private void UpdateTickValue(double tickValue)
         {
-            // Configura o gráfico
-            cartesianChart1.Series = new SeriesCollection
+            if (lblTickValue.InvokeRequired)
+            {
+                lblTickValue.Invoke(new Action<double>((value) =>
                 {
-                    new LineSeries
-                    {
-                        Title = "Preço",
-                        Values = _values,
-                        PointGeometry = null,
-                        LineSmoothness = 0.5
-                    }
-                };
-
-            cartesianChart1.AxisX.Add(new Axis
-            {
-                Title = "Tempo",
-                MinValue = -1, // Desloca o gráfico para começar antes do primeiro ponto
-                Separator = new Separator
-                {
-                    Step = 1, // Define o intervalo entre os valores do eixo X
-                    IsEnabled = false // Oculta as linhas verticais do grid, se desejar
-                }
-            });
-            cartesianChart1.AxisY.Add(new Axis
-            {
-                Title = "Valor",
-                LabelFormatter = value => value.ToString("C2")
-            });
-
-            // Inicializa o timer
-            //StartRealTimeData();
-
-        }
-        //private void StartRealTimeData()
-        //{
-        //    _tickCounter = 0;
-        //    _timer = new Timer { Interval = 1000 };
-        //    _timer.Tick += (sender, args) =>
-        //    {
-        //        // Gera valores dinâmicos (simulação)
-        //        double newValue = Math.Sin(_tickCounter * 0.1) * 10 + 50;
-        //        _tickCounter++;
-
-        //        // Atualiza o gráfico
-        //        _values.Add(newValue);
-
-        //        if (_values.Count > 50)
-        //        {
-        //            _values.RemoveAt(0);
-        //        }
-
-        //        // Força a atualização do gráfico (opcional)
-        //        //cartesianChart1.Update(true, true);
-        //    };
-        //    _timer.Start();
-        //}
-        private async void FrmRiseFail_Load(object sender, System.EventArgs e)
-        {
-            await StartFetchingAsync(); ;
-        }
-
-
-        double ultimo_preco = 0;
-        //double preco_atual = 0;
-        double diferenca = 0;
-        private SetasDirecao CalcularDiferencaRetornaSeta(double precoUpdate)
-        {
-            //0 = 0 - 100;
-            //0 = 100-100;
-            //0 = 100-200;
-            diferenca = precoUpdate - ultimo_preco;
-            ultimo_preco = precoUpdate;
-
-            if (diferenca == 0)
-            {
-                //manteve
-
-                return SetasDirecao.DireitaComPonto;
+                    lblTickValue.Text = value.ToString();
+                    _values.Add(tickValue);
+                    ManipularTick(tickValue);
+                }), tickValue);
             }
             else
             {
-                if (diferenca > 0)
-                {
-                    return SetasDirecao.Cima;
-                }
-                else
-                {
-                    //menor que zero
-                    return SetasDirecao.Baixo;
-                }
+                lblTickValue.Text = tickValue.ToString();
+                _values.Add(tickValue);
+                ManipularTick(tickValue);
+
             }
         }
 
-        private void AddSetaStatusContrato(double precoUpdate)
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            _cancellationTokenSource?.Cancel();
+            btnStop.Enabled = false;
+            btnFiltrarContratoIndiceVolatividade.Enabled = true;
+            cmbxUnderlying_symbol.Enabled = true;
+
+            _values.Clear();
+        }
+
+
+        private void ManipularTick(double tickValue)
+        {
+
+        }
+
+        private async void btnRise_Click(object sender, EventArgs e)
         {
             try
             {
-                flStatusPrecoContrato.Controls.Add(CtrlUpDown.CriarControle(CalcularDiferencaRetornaSeta(precoUpdate)));
+                lblRiseTickCompra.Text = lblTickValue.Text;
+                //manual duracao
+                await ExecuteRiseFallTrade(
+                txtToken.Text,   // Token de autenticação
+                cmbxUnderlying_symbol.Text,             // Índice
+                Convert.ToDouble(txtValorEntrada.Text),                 // Stake (valor da aposta)
+                contador_tick_compra,                  // Duração
+                "t",                // Unidade de duração (ticks)
+                "CALL"              // Tipo de contrato: "CALL" (Rise) ou "PUT" (Fall)
+                );
+
+                
             }
             catch (Exception ex)
             {
@@ -193,32 +294,27 @@ namespace DEMO.app.deriv
             }
         }
 
-        int tick = 0;
-        DateTime time_incial = DateTime.Now;
-        private async void timer1_Tick(object sender, System.EventArgs e)
+        private async void btnFall_Click(object sender, EventArgs e)
         {
             try
             {
-                //var resultContract = await _proposalContractServices.GetProposalResponseAsync();
-                //txtPrecoContrato.Text = resultContract.proposal.spot.ToString();
-                //_values.Add(Convert.ToDouble(resultContract.proposal.spot));
+                lblRiseTickCompra.Text = lblTickValue.Text;
+                //manual duracao
+                await ExecuteRiseFallTrade(
+                txtToken.Text,   // Token de autenticação
+                cmbxUnderlying_symbol.Text,             // Índice
+                Convert.ToDouble(txtValorEntrada.Text),                 // Stake (valor da aposta)
+                contador_tick_compra,                  // Duração
+                "t",                // Unidade de duração (ticks)
+                "PUT"              // Tipo de contrato: "CALL" (Rise) ou "PUT" (Fall)
+                );
 
-
-                var resultContract = await _proposalContractServices.GetProposalResponseAsync();
-                tick += 1;
-                lblPreco.Text = resultContract.proposal.spot.ToString();
-                var preco = Convert.ToDouble(resultContract.proposal.spot.ToString());
-
-                _values.Add(preco);
-                AddSetaStatusContrato(preco);
-
-                lblTick.Text = $"Tick: {tick}";
-                lblTempoExecucao.Text = $"Tempo de Execução: {DateTime.Now - time_incial}";
 
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("Erro Capturado dentro do time. FrmRiseFail" + ex.Message);
+
+                MessageBox.Show(ex.Message);
             }
 
         }

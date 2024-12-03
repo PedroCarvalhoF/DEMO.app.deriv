@@ -1,4 +1,5 @@
-﻿using DEMO.app.deriv.services.DTOS.Authorize;
+﻿using DEMO.app.deriv.Ferramentas;
+using DEMO.app.deriv.services.DTOS.Authorize;
 using DEMO.app.deriv.services.DTOS.Ping;
 using DEMO.app.deriv.services.Services;
 using DEMO.app.deriv.services.Services.ConexaoAPI;
@@ -8,7 +9,6 @@ using DEMO.app.deriv.services.Services.DeriviApi.Ticks;
 using DEMO.app.deriv.services.Services.DeriviApi.VelocidadeConexao;
 using LiveCharts;
 using LiveCharts.Wpf;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Threading;
 using System.Windows.Forms;
@@ -285,7 +285,7 @@ namespace DEMO.app.deriv
         {
             try
             {
-                using (FrmRiseFail frm = new FrmRiseFail())
+                using (FrmRiseFail frm = new FrmRiseFail(_tickServices, _authorizerServices, _pingMsServices, txtToken.Text, Convert.ToDecimal(txtSaldoInicial.Text)))
                 {
                     frm.ShowDialog();
                 }
@@ -336,6 +336,13 @@ namespace DEMO.app.deriv
         private void cmbxUnderlying_symbol_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var fmr = new FrmRiseFail(_tickServices, _authorizerServices, _pingMsServices, txtToken.Text, Convert.ToDecimal(txtSaldoInicial.Text));
+
+            fmr.Show();
         }
     }
 }

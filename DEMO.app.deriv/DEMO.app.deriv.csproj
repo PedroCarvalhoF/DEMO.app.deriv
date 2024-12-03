@@ -101,6 +101,10 @@
     <Compile Include="Controles\CtrlUpDown.Designer.cs">
       <DependentUpon>CtrlUpDown.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controles\Helpers\EasyPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Ferramentas\Exibir.cs" />
     <Compile Include="Ferramentas\FerramentaJson.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -173,6 +177,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\seta_manteve.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chart_com_seta.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

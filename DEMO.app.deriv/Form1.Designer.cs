@@ -47,11 +47,12 @@
             this.cmbxUnderlying_symbol = new System.Windows.Forms.ComboBox();
             this.btnFiltrarContratoIndiceVolatividade = new System.Windows.Forms.Button();
             this.grpVolatilities = new System.Windows.Forms.GroupBox();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.lblTickValue = new System.Windows.Forms.Label();
-            this.btnTickManual = new System.Windows.Forms.Button();
             this.lblTickManual = new System.Windows.Forms.Label();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.btnTickManual = new System.Windows.Forms.Button();
+            this.lblTickValue = new System.Windows.Forms.Label();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.button1 = new System.Windows.Forms.Button();
             this.grpVolatilities.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,7 +63,7 @@
             this.txtToken.Name = "txtToken";
             this.txtToken.Size = new System.Drawing.Size(231, 25);
             this.txtToken.TabIndex = 0;
-            this.txtToken.Text = "meMSIVnpvvReid2";
+            this.txtToken.Text = "5a7J4zG40xIUAZe";
             this.txtToken.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // lblToken
@@ -248,6 +249,16 @@
             this.grpVolatilities.TabStop = false;
             this.grpVolatilities.Text = "Contratos Volatility";
             // 
+            // lblTickManual
+            // 
+            this.lblTickManual.AutoSize = true;
+            this.lblTickManual.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTickManual.Location = new System.Drawing.Point(5, 104);
+            this.lblTickManual.Name = "lblTickManual";
+            this.lblTickManual.Size = new System.Drawing.Size(103, 22);
+            this.lblTickManual.TabIndex = 33;
+            this.lblTickManual.Text = "TickManual";
+            // 
             // btnStop
             // 
             this.btnStop.Enabled = false;
@@ -259,16 +270,6 @@
             this.btnStop.Text = "stop";
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            // 
-            // lblTickValue
-            // 
-            this.lblTickValue.AutoSize = true;
-            this.lblTickValue.Font = new System.Drawing.Font("Arial", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTickValue.Location = new System.Drawing.Point(368, 9);
-            this.lblTickValue.Name = "lblTickValue";
-            this.lblTickValue.Size = new System.Drawing.Size(220, 72);
-            this.lblTickValue.TabIndex = 31;
-            this.lblTickValue.Text = "Indice:";
             // 
             // btnTickManual
             // 
@@ -282,32 +283,43 @@
             this.btnTickManual.UseVisualStyleBackColor = true;
             this.btnTickManual.Click += new System.EventHandler(this.button2_Click);
             // 
-            // lblTickManual
+            // lblTickValue
             // 
-            this.lblTickManual.AutoSize = true;
-            this.lblTickManual.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTickManual.Location = new System.Drawing.Point(5, 104);
-            this.lblTickManual.Name = "lblTickManual";
-            this.lblTickManual.Size = new System.Drawing.Size(103, 22);
-            this.lblTickManual.TabIndex = 33;
-            this.lblTickManual.Text = "TickManual";
+            this.lblTickValue.AutoSize = true;
+            this.lblTickValue.Font = new System.Drawing.Font("Arial", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTickValue.Location = new System.Drawing.Point(601, 9);
+            this.lblTickValue.Name = "lblTickValue";
+            this.lblTickValue.Size = new System.Drawing.Size(220, 72);
+            this.lblTickValue.TabIndex = 31;
+            this.lblTickValue.Text = "Indice:";
             // 
             // cartesianChart1
             // 
             this.cartesianChart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cartesianChart1.Location = new System.Drawing.Point(380, 84);
+            this.cartesianChart1.Location = new System.Drawing.Point(380, 106);
             this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(751, 339);
+            this.cartesianChart1.Size = new System.Drawing.Size(751, 316);
             this.cartesianChart1.TabIndex = 32;
             this.cartesianChart1.Text = "cartesianChart1";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(380, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(117, 54);
+            this.button1.TabIndex = 33;
+            this.button1.Text = "Rise/Fall";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1143, 627);
+            this.ClientSize = new System.Drawing.Size(1143, 434);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.cartesianChart1);
             this.Controls.Add(this.lblTickValue);
             this.Controls.Add(this.grpVolatilities);
@@ -367,6 +379,7 @@
         private System.Windows.Forms.Button btnTickManual;
         private System.Windows.Forms.Label lblTickManual;
         private LiveCharts.WinForms.CartesianChart cartesianChart1;
+        private System.Windows.Forms.Button button1;
     }
 }
 

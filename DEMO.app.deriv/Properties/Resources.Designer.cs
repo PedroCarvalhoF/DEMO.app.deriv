@@ -63,6 +63,16 @@ namespace DEMO.app.deriv.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap chart_com_seta {
+            get {
+                object obj = ResourceManager.GetObject("chart_com_seta", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap seta_baixo {
             get {
                 object obj = ResourceManager.GetObject("seta_baixo", resourceCulture);

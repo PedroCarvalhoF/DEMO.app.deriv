@@ -120,12 +120,12 @@
     <Compile Include="Services\Helpers\StatusCodeHelpers.cs" />
     <Compile Include="Services\ServicosApp.cs" />
     <Compile Include="Tokens\Tokens.cs" />
+    <Compile Include="Tools\LogTools.cs" />
     <Compile Include="Urls\UrlsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Implementacoes\" />
     <Folder Include="Services\DeriviApi\Token\" />
-    <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

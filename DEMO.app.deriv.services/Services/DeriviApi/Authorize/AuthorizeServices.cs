@@ -1,6 +1,8 @@
 ﻿using DEMO.app.deriv.services.DTOS.Authorize;
 using DEMO.app.deriv.services.Services.ConexaoAPI;
+using System.Net.WebSockets;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DEMO.app.deriv.services.Services.DeriviApi.Authorize
@@ -59,7 +61,7 @@ namespace DEMO.app.deriv.services.Services.DeriviApi.Authorize
                         }
                     }
                 }
-
+                
                 return authorizeDto;
             }
             catch (System.Exception ex)
