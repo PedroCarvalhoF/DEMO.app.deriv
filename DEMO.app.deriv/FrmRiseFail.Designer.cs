@@ -66,6 +66,7 @@
             this.easyPanel2 = new DEMO.app.deriv.Controles.Helpers.EasyPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.grpVolatilities.SuspendLayout();
             this.easyPanel9.SuspendLayout();
             this.easyPanel6.SuspendLayout();
@@ -223,6 +224,7 @@
             this.easyPanel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(243)))), ((int)(((byte)(244)))));
             this.easyPanel9.BorderColor = System.Drawing.Color.White;
             this.easyPanel9.BorderThickness = 1.5F;
+            this.easyPanel9.Controls.Add(this.button3);
             this.easyPanel9.Controls.Add(this.btnFall);
             this.easyPanel9.Controls.Add(this.btnRise);
             this.easyPanel9.CornerRadius = 8;
@@ -234,7 +236,7 @@
             this.easyPanel9.Name = "easyPanel9";
             this.easyPanel9.ShadowColor = System.Drawing.Color.Gray;
             this.easyPanel9.ShadowSize = 5;
-            this.easyPanel9.Size = new System.Drawing.Size(264, 132);
+            this.easyPanel9.Size = new System.Drawing.Size(264, 173);
             this.easyPanel9.TabIndex = 3;
             // 
             // btnFall
@@ -245,7 +247,7 @@
             this.btnFall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFall.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFall.ForeColor = System.Drawing.Color.White;
-            this.btnFall.Location = new System.Drawing.Point(7, 75);
+            this.btnFall.Location = new System.Drawing.Point(6, 120);
             this.btnFall.Name = "btnFall";
             this.btnFall.Size = new System.Drawing.Size(251, 43);
             this.btnFall.TabIndex = 1;
@@ -615,12 +617,29 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(180)))), ((int)(((byte)(179)))));
+            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.Color.White;
+            this.button3.Location = new System.Drawing.Point(7, 71);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(251, 43);
+            this.button3.TabIndex = 2;
+            this.button3.Text = "Rise 10x";
+            this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // FrmRiseFail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(892, 561);
+            this.ClientSize = new System.Drawing.Size(892, 643);
             this.Controls.Add(this.lblRiseTickCompra);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtPingMs);
@@ -701,5 +720,6 @@
         private System.Windows.Forms.TextBox txtPingMs;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblRiseTickCompra;
+        private System.Windows.Forms.Button button3;
     }
 }
